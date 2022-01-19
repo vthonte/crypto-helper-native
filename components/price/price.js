@@ -5,11 +5,11 @@ import { StyleSheet, Text, View } from 'react-native';
 
 
 
-export default function Price() {
+export default function Price(props) {
   return (
     <View style={''}>
 
-	<Text>Price</Text>
+	<Text>Current Price: {props.price}</Text>
 
     </View>
   );

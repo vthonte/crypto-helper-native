@@ -6,11 +6,11 @@ import { StyleSheet, Text, View } from 'react-native';
 
 
 
-export default function MarketCap() {
+export default function MarketCap(props) {
   return (
-    <View style={''}>
+    <View style={'container'}>
 
-<Text>Get Market Cap</Text>
+<Text>Market Cap (in USD) : {props.marketCap}</Text>
 
     </View>
   );
