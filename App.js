@@ -1,12 +1,14 @@
-import React, {useState} from 'react';
+import {React, useState} from "react";
+import { Provider as PaperProvider } from "react-native-paper";
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View } from 'react-native';
-// import CryptoSelect from './components/cryptoSelect/cryptoSelect';
-// import MarketCap from './components/marketCap/marketCap';
-// import Price from './components/price/price';
-import DetailBox from './components/detailBox/detailBox';
-import { Button } from 'react-native-web';
 
+//import DetailBox from './components/detailBox/detailBox';
+import { Button } from 'react-native-web';
+import theme from "./CustomProperties/Themes";
+
+import MainScreen from "./Screens/MainScreen";
+import TopBar from "./Components/TopBar";
 
 export default function App() {
 
@@ -26,9 +28,11 @@ export default function App() {
 
 
   return (
-    <View style={styles.container}>
-      <DetailBox/>
-    </View>
+
+    <PaperProvider theme={theme}>
+      <TopBar />
+      <MainScreen />
+    </PaperProvider>
   );
 }
 
@@ -39,26 +43,4 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  neoBox: {
-      flex: 1,
-    //backgroundColor: '#dfdfdf',
-    alignItems: 'center',
-    justifyContent: 'center',
-    textAlign: 'center',
-    //width: 195,
-    //maxHeight: 200,
-    alignSelf: 'center',
-    //borderRadius: ,
-  },
-    neoDecision: {
-      flex: 1,
-    backgroundColor: '#dfdfdf',
-    alignItems: 'center',
-    justifyContent: 'center',
-    textAlign: 'center',
-    width: 195,
-    maxHeight: 200,
-    alignSelf: 'center',
-    //borderRadius: ,
-  }
 });

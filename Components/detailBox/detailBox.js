@@ -14,9 +14,9 @@ export default function DetailBox() {
 
 
   const [options,setOptions] = useState([
-    'ETH',
-    'DAI', 
-    'BTC', 
+    'ethereum',
+    'neo', 
+    'bitcoin', 
   ]);
 
   const [marketCap, setMarketCap] = useState(0);
@@ -42,7 +42,12 @@ export default function DetailBox() {
 
       return li;
     } catch (error) {
-      console.error(error);
+      console.log("Error while getting Coins - Retrying");
+      li = await getCoinsFromApiAsync();
+
+      //console.error(error);
+
+      return li;
     }
   };
 
@@ -76,21 +81,38 @@ export default function DetailBox() {
 
       return coinDict;
     } catch (error) {
-      console.error(error);
+      console.log("Error while getting Coin data - Retrying");
+      coinDict = await getCoinDataFromApiAsync();
+      //console.error(error);
+
+      return coinDict;
     }
   };
 
   
   const changeMarketCap = (selectedItem) => {
+    try{
 
       setMarketCap(coinDict[selectedItem.toString()]['marketCapUsd']);
-      console.log("MarketCap:" + coinDict[selectedItem.toString()]['marketCapUsd']);
-};
+      //console.log("MarketCap:" + coinDict[selectedItem.toString()]['marketCapUsd']);
+    }catch (error){
+      console.log('Error while fetching MarketCapUsd for '+selectedItem.toString());
+    }
+
+    };
 
   const changePrice = (selectedItem) => {
 
-  setPrice(coinDict[selectedItem.toString()]['priceUsd']);
-  console.log("Price:" + coinDict[selectedItem.toString()]['priceUsd']);
+    try{
+
+      setPrice(coinDict[selectedItem.toString()]['priceUsd']);
+      //console.log("MarketCap:" + coinDict[selectedItem.toString()]['marketCapUsd']);
+    }catch (error){
+      console.log('Error while fetching MarketCapUsd for '+selectedItem.toString());
+    }
+
+
+  //console.log("Price:" + coinDict[selectedItem.toString()]['priceUsd']);
 };
 
 
@@ -100,10 +122,15 @@ export default function DetailBox() {
 
   useEffect(async () => {
 
-    setCoinDict(await getCoinDataFromApiAsync());
-    setOptions(await getCoinsFromApiAsync());
-  
-  },([]));
+    var coinDataTemp = await getCoinDataFromApiAsync();
+    if (coinDataTemp)
+    {  setCoinDict(coinDataTemp);}
+
+    var coinDataTemp = await getCoinsFromApiAsync();
+    if (coinDataTemp)
+    {  setOptions(coinDataTemp);}
+
+  },([setOptions]));
 
 
 
@@ -112,13 +139,24 @@ export default function DetailBox() {
   return (
     <View style={styles.container}>
           <StatusBar style="auto" />
+          <View><Text>Tap to Select coin:</Text></View>
           <CryptoSelect options={options} changeMarketCap = {changeMarketCap} changePrice = {changePrice}/>
     <View style={styles.neoBox}>
       <MarketCap marketCap = {marketCap}/>
-	<Price price = {price}/>
-	<View style={styles.neoDecision}>
-      <Text>Yes or No</Text>
+    </View>
+
+    <View style={styles.neoBox}>
+      <Price price = {price}/>
+
       </View>
+
+      <View style={styles.neoDecision}>
+        <View style={styles.neoDecisionYes}>      
+        <Text>Yes</Text>
+        </View>
+        <View style={styles.neoDecisionNo}>
+        <Text>No</Text>
+        </View>
 
       </View>
     </View>
@@ -130,28 +168,52 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#fff',
     alignItems: 'center',
-    justifyContent: 'center',
+    //justifyContent: 'center',
   },
   neoBox: {
-    flex: 1,
+    //flex: 1,
+   // flexDirection:'row',
     //backgroundColor: '#dfdfdf',
-    alignItems: 'center',
-    justifyContent: 'center',
+    //alignItems: 'center',
+    //justifyContent: 'center',
     textAlign: 'center',
-    //width: 195,
+    width: '100%',
     //maxHeight: 200,
-    alignSelf: 'center',
+    //alignSelf: 'stretch',
     //borderRadius: ,
   },
     neoDecision: {
-      flex: 1,
+      //flex: 1,
+    flexDirection:'row',
     backgroundColor: '#dfdfdf',
     alignItems: 'center',
     justifyContent: 'center',
     textAlign: 'center',
-    width: 195,
-    maxHeight: 20,
+    //width: 195,
+    //maxHeight: 20,
     alignSelf: 'center',
     //borderRadius: ,
-  }
+  },
+  neoDecisionYes: {
+  flex: 1,
+  backgroundColor: '#dfffdf',
+  alignItems: 'center',
+  justifyContent: 'center',
+  textAlign: 'center',
+  //width: 195,
+  //maxHeight: 20,
+  alignSelf: 'center',
+  //borderRadius: ,
+},
+neoDecisionNo: {
+flex: 1,
+backgroundColor: '#ffdfdf',
+alignItems: 'center',
+justifyContent: 'center',
+textAlign: 'center',
+//width: 195,
+//maxHeight: 20,
+alignSelf: 'center',
+//borderRadius: ,
+},
 });
